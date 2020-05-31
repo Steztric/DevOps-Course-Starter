@@ -3,16 +3,33 @@
 
 {% block content %}
   <div class="jumbotron">
-    <h1 class="display-4">To-Do App</h1>
-    <p class="lead">Just another to-do app.</p>
+    <h1 class="display-4">Sterren's To-Do List</h1>
+    <p class="lead">A list of stuff that Sterren needs to do.</p>
   </div>
 
   <div class="row">
     <div class="col-md-12">
       <h2>Items</h2>
-      <ul class="list-group mb-4">
-        <!-- List the todo items here -->
-      </ul>
+      <!-- List the todo items here -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Status</th>
+            <th scope="col">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+          <tr>
+            <th scope="row">{{item.id}}</th>
+            <td>{{item.status}}</td>
+            <td>{{item.title}}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <a href="{{ url_for('add') }}">Add new item</a>
     </div>
   </div>
 {% endblock %}
