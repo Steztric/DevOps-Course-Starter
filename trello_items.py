@@ -1,6 +1,7 @@
 import os
 from requests import get, put, post
 import json
+from item import ToDoItem
 
 _todo_list='5f140cd74e0efa661d85d545'
 _done_list='5f14102775f3e65db1615d81'
@@ -11,11 +12,7 @@ _auth_params = {
 }
 
 def _make_item(trello_content, status):
-    return {
-        'id': trello_content['id'],
-        'status': status,
-        'title': trello_content['name']
-    }
+    return ToDoItem(trello_content['id'], trello_content['name'], status)
 
 def _get_list(list_id, category):
     response = get(f'https://api.trello.com/1/lists/{list_id}/cards', params=_auth_params)
@@ -28,8 +25,10 @@ def get_items():
     return todo_items + done_items
 
 def get_item(id):
-    items = get_items()
-    return next((item for item in items if item['id'] == int(id)), None)
+    response = get(f'https://api.trello.com/1/cards/{id}', params=_auth_params)
+    content = json.loads(response.content)
+    status = "Not Started" if content['idList'] == _todo_list else "Finished"
+    return _make_item(content, status)
 
 def add_item(title):
     card_details = {
@@ -49,12 +48,11 @@ def mark_done(id):
     }
 
     list_details.update(_auth_params)
-    response = put(f'https://api.trello.com/1/cards/{id}', params=list_details)
-    print(response)
+    put(f'https://api.trello.com/1/cards/{id}', params=list_details)
 
 
 if __name__ == '__main__':
     new_item = add_item('testing testing')
-    mark_done(new_item['id'])
+    mark_done(new_item.id)
     todo_list = get_items()
     print(len(todo_list))
