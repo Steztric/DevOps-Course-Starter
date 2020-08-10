@@ -21,10 +21,10 @@
           </tr>
         </thead>
         <tbody>
-        {% for item in items %}
+        {% for item in view_model.items %}
           <tr>
             <th scope="row">{{item.id}}</th>
-            <td>{{item.status}}</td>
+            <td>{{item.status.value}}</td>
             <td>{{item.title}}</td>
             <td><a href="{{ url_for('edit', id=item.id) }}">Edit item</a></td>
           </tr>
