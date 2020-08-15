@@ -2,6 +2,7 @@ import os
 from requests import get, put, post
 import json
 from item import ToDoItem, Status
+from dateutil import parser
 
 _todo_list='5f140cd74e0efa661d85d545'
 _doing_list='5f30743b27212026911eee3a'
@@ -13,7 +14,11 @@ _auth_params = {
 }
 
 def _make_item(trello_content, status):
-    return ToDoItem(trello_content['id'], trello_content['name'], status)
+    return ToDoItem(
+        trello_content['id'],
+        trello_content['name'],
+        status,
+        parser.parse(trello_content['dateLastActivity']))
 
 def _get_list(list_id, category):
     response = get(f'https://api.trello.com/1/lists/{list_id}/cards', params=_auth_params)

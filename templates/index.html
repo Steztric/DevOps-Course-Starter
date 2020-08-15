@@ -8,30 +8,85 @@
   </div>
 
   <div class="row">
+    <a href="{{ url_for('add') }}">Add new item</a>
+  </div>
+
+  <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
-      <!-- List the todo items here -->
+      <h2>To Do</h2>
       <table class="table">
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">Status</th>
             <th scope="col">Description</th>
+            <th scope="col">Date Changed</th>
             <th scope="col">Edit</th>
           </tr>
         </thead>
         <tbody>
-        {% for item in view_model.items %}
+        {% for item in view_model.to_do %}
           <tr>
             <th scope="row">{{item.id}}</th>
-            <td>{{item.status.value}}</td>
             <td>{{item.title}}</td>
+            <td>{{item.last_modified.strftime("%d/%m/%Y")}}</td>
             <td><a href="{{ url_for('edit', id=item.id) }}">Edit item</a></td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
-      <a href="{{ url_for('add') }}">Add new item</a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Doing</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Description</th>
+            <th scope="col">Date Changed</th>
+            <th scope="col">Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in view_model.doing %}
+          <tr>
+            <th scope="row">{{item.id}}</th>
+            <td>{{item.title}}</td>
+            <td>{{item.last_modified.strftime("%d/%m/%Y")}}</td>
+            <td><a href="{{ url_for('edit', id=item.id) }}">Edit item</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <a href="{{ url_for('index', show_done=(not view_model.show_all_done_items)) }}">Show/hide items done before today</a>
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Done</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Description</th>
+            <th scope="col">Date Changed</th>
+            <th scope="col">Edit</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in done_items %}
+          <tr>
+            <th scope="row">{{item.id}}</th>
+            <td>{{item.title}}</td>
+            <td>{{item.last_modified.strftime("%d/%m/%Y")}}</td>
+            <td><a href="{{ url_for('edit', id=item.id) }}">Edit item</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 {% endblock %}

@@ -3,14 +3,33 @@ import trello_items as api
 from forms import AddToDoForm, StartDoingForm, MarkDoneForm
 from view_model import ViewModel
 from item import Status
+from datetime import datetime, date
+import pytz
+
+utc=pytz.UTC
 
 app = Flask(__name__)
 app.config.from_object('flask_config.Config')
 
+def set_show_done(view_model: ViewModel):
+    show_done = request.args.get('show_done')
+    if (show_done != None):
+        if show_done == 'True':
+            view_model.show_all_done_items = True
+        elif show_done == 'False':
+            view_model.show_all_done_items = False
+
+def get_today():
+    now = datetime.now()
+    return date(now.year, now.month, now.day)
+
 @app.route('/')
 def index():
     item_view_model = ViewModel(api.get_items())
-    return render_template('index.html', view_model=item_view_model)
+    set_show_done(item_view_model)
+    today = get_today()
+    done_items = item_view_model.older_done_items if item_view_model.show_all_done_items else item_view_model.recent_done_items(today)
+    return render_template('index.html', view_model=item_view_model, done_items=done_items)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
