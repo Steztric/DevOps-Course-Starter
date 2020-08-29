@@ -7,7 +7,6 @@ from datetime import datetime, date
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('flask_config.Config')
 
     def set_show_done(view_model: ViewModel):
         show_done = request.args.get('show_done')

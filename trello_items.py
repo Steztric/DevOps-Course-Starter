@@ -1,12 +1,12 @@
 import os
-from requests import get, put, post
+from requests import get, put, post, delete
 import json
 from item import ToDoItem, Status
 from dateutil import parser
 
-_todo_list='5f140cd74e0efa661d85d545'
-_doing_list='5f30743b27212026911eee3a'
-_done_list='5f14102775f3e65db1615d81'
+_todo_list=os.getenv('TODO_LIST_ID')
+_doing_list=os.getenv('DOING_LIST_ID')
+_done_list=os.getenv('DONE_LIST_ID')
 
 _auth_params = {
     'key': os.getenv('API_KEY'),
@@ -22,7 +22,7 @@ def _make_item(trello_content, status):
 
 def _get_list(list_id, category):
     response = get(f'https://api.trello.com/1/lists/{list_id}/cards', params=_auth_params)
-    items = json.loads(response.content)
+    items = response.json()
     return [_make_item(content, category) for content in items]
 
 def get_items():
@@ -46,7 +46,7 @@ def add_item(title):
 
     card_details.update(_auth_params)
     response = post('https://api.trello.com/1/cards', params=card_details)
-    content = json.loads(response.content)
+    content = response.json()
     return _make_item(content, Status.to_do)
 
 def mark_doing(id):
@@ -64,6 +64,20 @@ def mark_done(id):
 
     list_details.update(_auth_params)
     put(f'https://api.trello.com/1/cards/{id}', params=list_details)
+
+
+def create_trello_board():
+    board_details = {
+        'name': 'TEST_BOARD'
+    }
+
+    board_details.update(_auth_params)
+    response = post(f'https://api.trello.com/1/boards/', params=board_details)
+    content = response.json()
+    return content['id']
+
+def delete_trello_board(id):
+    delete(f'https://api.trello.com/1/boards/{id}', params=_auth_params)
 
 
 if __name__ == '__main__':
