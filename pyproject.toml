@@ -1,0 +1,9 @@
+[tool.poetry]
+name = "todo_app"
+version = "1.0.0"
+description = "The todo app"
+authors = ["Sterren Fisher"]
+
+[virtualenvs]
+create = true
+in-project = false
