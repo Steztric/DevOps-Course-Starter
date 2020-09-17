@@ -3,5 +3,7 @@ import pytest
 
 @pytest.fixture(scope="module")
 def driver():
-    with webdriver.Firefox() as driver:
+    options = webdriver.FirefoxOptions()
+    options.add_argument('-headless')
+    with webdriver.Firefox(options=options) as driver:
         yield driver

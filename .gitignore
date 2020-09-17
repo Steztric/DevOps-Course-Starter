@@ -116,3 +116,5 @@ env/
 ### Configuration files ###
 .env
 .vscode/
+.pyenv/
+.vagrant/
